@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return { title: `${p.title} — Varun Prasad`, description: p.outcome, openGraph: { title: p.title, description: p.outcome, images: [imgSrc(p.slug, p.cover.n)] } };
 }
 
-function Pic({ p, im, sizes }: { p: Project; im: Img; sizes?: string }) {
+function Pic({ p, im, sizes, eager }: { p: Project; im: Img; sizes?: string; eager?: boolean }) {
   const [w, h] = imgSize(p.slug, im.n);
   const tall = h / w > 1.1;
   return (
@@ -26,7 +26,8 @@ function Pic({ p, im, sizes }: { p: Project; im: Img; sizes?: string }) {
           width={w}
           height={h}
           alt={im.alt}
-          loading="lazy"
+          loading={eager ? "eager" : "lazy"}
+          fetchPriority={eager ? "high" : undefined}
           decoding="async"
           sizes={sizes}
           className="block h-auto w-full"
@@ -38,15 +39,15 @@ function Pic({ p, im, sizes }: { p: Project; im: Img; sizes?: string }) {
   );
 }
 
-function GalleryRow({ p, row }: { p: Project; row: Row }) {
+function GalleryRow({ p, row, first }: { p: Project; row: Row; first?: boolean }) {
   if (row.type === "stack") {
     return (
-      <Reveal>
+      <Reveal skip={first}>
         <div className="overflow-hidden rounded-[20px] p-4 md:p-10" style={{ background: p.panel }}>
-          {row.imgs.map((im) => {
+          {row.imgs.map((im, k) => {
             const [w, h] = imgSize(p.slug, im.n);
             // eslint-disable-next-line @next/next/no-img-element
-            return <img key={im.n} src={imgSrc(p.slug, im.n)} width={w} height={h} alt={im.alt} loading="lazy" decoding="async" className="block h-auto w-full" />;
+            return <img key={im.n} src={imgSrc(p.slug, im.n)} width={w} height={h} alt={im.alt} loading={first && k === 0 ? "eager" : "lazy"} decoding="async" className="block h-auto w-full" />;
           })}
         </div>
         {row.imgs[0].caption && <p className="mt-3 text-sm text-muted">{row.imgs[0].caption}</p>}
@@ -55,10 +56,10 @@ function GalleryRow({ p, row }: { p: Project; row: Row }) {
   }
   const cols = row.type === "full" ? "" : row.type === "two" ? "grid gap-4 md:grid-cols-2 md:gap-6" : "grid grid-cols-1 gap-4 sm:grid-cols-3 md:gap-6";
   return (
-    <Reveal>
+    <Reveal skip={first}>
       <div className={cols}>
         {row.imgs.map((im) => (
-          <Pic key={im.n} p={p} im={im} sizes={row.type === "full" ? undefined : "(min-width: 768px) 45vw, 100vw"} />
+          <Pic key={im.n} p={p} im={im} eager={first} sizes={row.type === "full" ? undefined : "(min-width: 768px) 45vw, 100vw"} />
         ))}
       </div>
     </Reveal>
@@ -102,7 +103,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <section key={si} className="grid gap-6 md:gap-8" aria-label={s.label}>
             {s.label && <h2 className="label mt-8 border-b border-border pb-3 text-muted">{s.label}</h2>}
             {s.rows.map((r, ri) => (
-              <GalleryRow key={ri} p={p} row={r} />
+              <GalleryRow key={ri} p={p} row={r} first={si === 0 && ri === 0} />
             ))}
           </section>
         ))}

@@ -31,7 +31,7 @@ export default function Home() {
               <h3 className="label mb-8 border-b border-border pb-4 text-muted">{g}</h3>
               <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
                 {list.map((p, idx) => (
-                  <ProjectCard key={p.slug} p={p} wide={idx === 0 || (idx === list.length - 1 && list.length % 2 === 0)} />
+                  <ProjectCard key={p.slug} p={p} priority={g === groups[0] && idx < 2} wide={idx === 0 || (idx === list.length - 1 && list.length % 2 === 0)} />
                 ))}
               </div>
             </div>

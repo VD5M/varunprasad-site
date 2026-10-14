@@ -97,12 +97,12 @@ async function finalLockup(kind) {
   const buf = await sharp(path.join(SRC, "figma/final.png")).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const { data, info } = buf;
   const bg = { light: "#ffffff", dark: "#1e1e1e", red: "#e60000" }[kind];
-  if (kind !== "light") {
-    for (let i = 0; i < data.length; i += 4) {
-      const [r, g, b] = [data[i], data[i + 1], data[i + 2]];
-      const dark = r < 90 && g < 90 && b < 90;
-      if (dark || kind === "red") { data[i] = data[i + 1] = data[i + 2] = 255; }
-    }
+  // The Figma export carries an opaque #1e1e1e frame fill: knock it out, keep black/red artwork.
+  for (let i = 0; i < data.length; i += 4) {
+    const [r, g, b] = [data[i], data[i + 1], data[i + 2]];
+    if (Math.abs(r - 30) < 10 && Math.abs(g - 30) < 10 && Math.abs(b - 30) < 10) { data[i + 3] = 0; continue; }
+    const dark = r < 90 && g < 90 && b < 90;
+    if (kind === "red" || (kind === "dark" && dark)) { data[i] = data[i + 1] = data[i + 2] = 255; }
   }
   const logo = await sharp(data, { raw: info }).resize({ width: 1500 }).png().toBuffer();
   return sharp({ create: { width: 2400, height: 1350, channels: 3, background: bg } })
@@ -133,6 +133,12 @@ async function load(d) {
   return out;
 }
 
+// Card thumbnails for the home grid (1200px wide; "cover" covers are cropped from the top).
+const covers = {
+  "pronto-rebrand": [6, "cover"], "now-switch": [1, "contain"], "free-au-domains": [1, "contain"], papparich: [1, "cover"],
+  "pronto-website": [1, "cover"], "ventraip-hosting": [1, "contain"], mercury: [1, "contain"],
+  "pronto-visual-system": [1, "cover"], "circular-media-group": [1, "cover"],
+};
 const sizes = {};
 const index = [];
 for (const [slug, list] of Object.entries(projects)) {
@@ -149,6 +155,11 @@ for (const [slug, list] of Object.entries(projects)) {
       index.push(`${slug}/${nn}  ${info.width}x${info.height}  ${d.src ?? "final-" + d.final}${d.slice ? " slice" + d.slice : ""}`);
     }
   }
+  const [cn, fit] = covers[slug];
+  const cinfo = await sharp(path.join(dir, `${String(cn).padStart(2, "0")}.webp`))
+    .resize(fit === "cover" ? { width: 1200, height: 860, fit: "cover", position: slug === "papparich" ? "centre" : "top" } : { width: 1200, withoutEnlargement: true })
+    .webp({ quality: 80 }).toFile(path.join(dir, "card.webp"));
+  sizes[`${slug}/card`] = [cinfo.width, cinfo.height];
   console.log(slug, n - 1);
 }
 fs.writeFileSync("src/content/image-sizes.json", JSON.stringify(sizes, null, 1));

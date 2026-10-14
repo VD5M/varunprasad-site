@@ -23,6 +23,10 @@
   2400,
   1350
  ],
+ "pronto-rebrand/card": [
+  1200,
+  860
+ ],
  "now-switch/01": [
   2400,
   2000
@@ -83,6 +87,10 @@
   750,
   1186
  ],
+ "now-switch/card": [
+  1200,
+  1000
+ ],
  "free-au-domains/01": [
   2400,
   2000
@@ -122,6 +130,10 @@
  "free-au-domains/10": [
   1200,
   2597
+ ],
+ "free-au-domains/card": [
+  1200,
+  1000
  ],
  "ventraip-hosting/01": [
   2400,
@@ -203,6 +215,10 @@
   750,
   1148
  ],
+ "ventraip-hosting/card": [
+  1200,
+  960
+ ],
  "mercury/01": [
   2052,
   1156
@@ -242,6 +258,10 @@
  "mercury/10": [
   662,
   560
+ ],
+ "mercury/card": [
+  1200,
+  676
  ],
  "pronto-visual-system/01": [
   2400,
@@ -283,6 +303,10 @@
   662,
   1152
  ],
+ "pronto-visual-system/card": [
+  1200,
+  860
+ ],
  "pronto-website/01": [
   1440,
   2450
@@ -311,6 +335,10 @@
   2400,
   1174
  ],
+ "pronto-website/card": [
+  1200,
+  860
+ ],
  "circular-media-group/01": [
   2400,
   2012
@@ -338,6 +366,10 @@
  "circular-media-group/07": [
   850,
   2400
+ ],
+ "circular-media-group/card": [
+  1200,
+  860
  ],
  "papparich/01": [
   2336,
@@ -494,5 +526,9 @@
  "papparich/39": [
   1012,
   848
+ ],
+ "papparich/card": [
+  1200,
+  860
  ]
 }

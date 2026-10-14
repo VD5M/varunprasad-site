@@ -17,12 +17,14 @@ export type Project = {
   credits?: string;
   link?: { href: string; text: string };
   panel: string;
-  cover: { n: number; fit: "contain" | "cover"; blend?: boolean; alt: string };
+  cover: { n: number; fit: "contain" | "cover"; pos?: "center"; blend?: boolean; alt: string };
   sections: Section[];
 };
 
 export const imgSize = (slug: string, n: number): [number, number] =>
   (sizes as unknown as Record<string, [number, number]>)[`${slug}/${String(n).padStart(2, "0")}`] ?? [1600, 1000];
+export const imgSizeRaw = (slug: string): [number, number] | undefined =>
+  (sizes as unknown as Record<string, [number, number]>)[`${slug}/card`];
 export const imgSrc = (slug: string, n: number) => `/work/${slug}/${String(n).padStart(2, "0")}.webp`;
 
 const i = (n: number, alt: string, caption?: string, blend?: boolean): Img => ({ n, alt, caption, blend });
@@ -82,11 +84,11 @@ export const projects: Project[] = [
     year: "2021",
     deliverables: "Landing page, social ads, device mockups",
     panel: "#E8322A",
-    cover: { n: 1, fit: "contain", blend: true, alt: "Now Switch! landing page on a desktop monitor" },
+    cover: { n: 1, fit: "contain", alt: "Now Switch! landing page on a desktop monitor" },
     sections: [
       {
         rows: [
-          full(i(1, "Now Switch! landing page on a desktop monitor", undefined, true)),
+          full(i(1, "Now Switch! landing page on a desktop monitor")),
           full(i(2, "Now Switch! landing page on a laptop")),
           two(
             i(3, "Concept board for the Now Switch! campaign with Nintendo imagery"),
@@ -100,7 +102,7 @@ export const projects: Project[] = [
             i(7, "Now Switch! landing page hero at desktop width"),
             i(8, "Now Switch! landing page review and steps section at desktop width"),
           ),
-          full(i(9, "Now Switch! campaign shown across phone and desktop devices", undefined, true)),
+          full(i(9, "Now Switch! campaign shown across phone and desktop devices")),
           three(
             i(10, "Facebook post showing the Now Switch! ad in a comment thread"),
             i(11, "Facebook feed ad: switch your web hosting to us and win a Nintendo Switch", "Social ad."),
@@ -128,11 +130,11 @@ export const projects: Project[] = [
     year: "2021",
     deliverables: "Campaign landing page, domain search, social ads",
     panel: "#C9733A",
-    cover: { n: 1, fit: "contain", blend: true, alt: "Two phones showing the 10,000 free .au domains campaign" },
+    cover: { n: 1, fit: "contain", alt: "Two phones showing the 10,000 free .au domains campaign" },
     sections: [
       {
         rows: [
-          full(i(1, "Two phones showing the 10,000 free .au domains campaign", undefined, true)),
+          full(i(1, "Two phones showing the 10,000 free .au domains campaign")),
           full(i(2, "Campaign landing page on a tablet")),
           full(i(3, "Illustrated outback landing page with the 10,000 free domains headline")),
           two(
@@ -166,7 +168,7 @@ export const projects: Project[] = [
     deliverables:
       "Promo posters, digital menu screens, social content, menus, packaging, store hoardings, product photography",
     panel: "#FFE14D",
-    cover: { n: 1, fit: "cover", alt: "Hokkaido Baked Cheese Tart logo on yellow" },
+    cover: { n: 1, fit: "cover", pos: "center", alt: "Hokkaido Baked Cheese Tart logo on yellow" },
     sections: [
       {
         label: "Hokkaido Baked Cheese Tart",
@@ -269,10 +271,6 @@ export const projects: Project[] = [
     sections: [
       {
         rows: [
-          two(
-            i(2, "Pronto marketing homepage design in Figma: hero, features and key feature sections", "Homepage design, desktop."),
-            i(3, "Pronto marketing homepage design in Figma: feature detail sections"),
-          ),
           full(i(7, "Design specification sheet with numbered annotations for the Pronto hero", "Design specs for engineering.")),
           full(i(1, "The live Pronto marketing site at desktop width", "Live site, desktop.")),
           three(
@@ -297,20 +295,20 @@ export const projects: Project[] = [
     year: "2021",
     deliverables: "Landing pages, illustration, pricing and review components",
     panel: "#4B2BB5",
-    cover: { n: 1, fit: "contain", blend: false, alt: "Three phones showing the VentraIP WordPress, cPanel and Business hosting landing pages" },
+    cover: { n: 1, fit: "contain", alt: "Three phones showing the VentraIP WordPress, cPanel and Business hosting landing pages" },
     sections: [
       {
         rows: [
           full(i(1, "Three phones showing the VentraIP WordPress, cPanel and Business hosting landing pages")),
           two(
-            i(2, "Two phones showing the VentraIP hosting landing pages", undefined, true),
-            i(3, "VentraIP enterprise hosting page on a monitor", undefined, true),
+            i(2, "Two phones showing the VentraIP hosting landing pages"),
+            i(3, "VentraIP enterprise hosting page on a monitor"),
           ),
           full(i(5, "Business hosting landing page at desktop width with pricing plans")),
           full(i(6, "WordPress hosting landing page with an illustrated purple hero")),
           full(i(7, "Hosting page section about servers and network infrastructure")),
           two(
-            i(4, "VentraIP hosting page on a tablet", undefined, true),
+            i(4, "VentraIP hosting page on a tablet"),
             i(8, "Hosting landing page section at desktop width"),
           ),
           three(
